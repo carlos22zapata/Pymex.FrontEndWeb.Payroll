@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Plus,
   Save,
@@ -130,48 +131,52 @@ export function OptionsBar({
         ))}
       </div>
 
-      {/* Móvil (<1024px): botón flotante esquina superior derecha con menú desplegable */}
-      {buttons.length > 0 && (
-        <div className="lg:hidden" ref={mobileRef}>
-          <button
-            type="button"
-            aria-label="Opciones"
-            aria-expanded={mobileOpen}
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className={`fixed top-2 right-3 z-50 flex h-11 w-11 items-center justify-center rounded-xl border shadow-md transition-colors ${
-              mobileOpen
-                ? 'bg-indigo-700 dark:bg-indigo-700 border-indigo-800 text-white'
-                : 'bg-indigo-600 dark:bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700'
-            }`}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <EllipsisVertical className="h-5 w-5" />}
-          </button>
+      {/* Móvil (<1024px): botón flotante esquina superior derecha con menú desplegable.
+          Portal a body: el header sticky z-30 crea stacking context y atrapa el z-index,
+          dejando el botón invisible detrás del header móvil (z-40). */}
+      {buttons.length > 0 &&
+        createPortal(
+          <div className="lg:hidden" ref={mobileRef}>
+            <button
+              type="button"
+              aria-label="Opciones"
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className={`fixed top-2 right-3 z-[45] flex h-11 w-11 items-center justify-center rounded-xl border shadow-md transition-colors ${
+                mobileOpen
+                  ? 'bg-indigo-700 dark:bg-indigo-700 border-indigo-800 text-white'
+                  : 'bg-indigo-600 dark:bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700'
+              }`}
+            >
+              {mobileOpen ? <X className="h-5 w-5" /> : <EllipsisVertical className="h-5 w-5" />}
+            </button>
 
-          {mobileOpen && (
-            <div className="fixed top-16 right-3 z-50 w-60 max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain rounded-xl border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-gray-900 shadow-2xl py-1.5 animate-dropdown-in">
-              {buttons.map((btn) => (
-                <button
-                  key={btn.key}
-                  type="button"
-                  disabled={btn.disabled}
-                  onClick={() => {
-                    setMobileOpen(false);
-                    btn.onClick();
-                  }}
-                  className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  {btn.loading ? (
-                    <Loader2 className="h-5 w-5 shrink-0 animate-spin" />
-                  ) : (
-                    <btn.icon className="h-5 w-5 shrink-0" />
-                  )}
-                  <span className="flex-1">{btn.tooltip}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+            {mobileOpen && (
+              <div className="fixed top-16 right-3 z-[45] w-60 max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain rounded-xl border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-gray-900 shadow-2xl py-1.5 animate-dropdown-in">
+                {buttons.map((btn) => (
+                  <button
+                    key={btn.key}
+                    type="button"
+                    disabled={btn.disabled}
+                    onClick={() => {
+                      setMobileOpen(false);
+                      btn.onClick();
+                    }}
+                    className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/40 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {btn.loading ? (
+                      <Loader2 className="h-5 w-5 shrink-0 animate-spin" />
+                    ) : (
+                      <btn.icon className="h-5 w-5 shrink-0" />
+                    )}
+                    <span className="flex-1">{btn.tooltip}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>,
+          document.body
+        )}
     </>
   );
 }

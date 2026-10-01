@@ -24,13 +24,13 @@ export function Layout({ children }: LayoutProps) {
 
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       <div
-        className={`fixed inset-y-0 left-0 z-40 lg:static lg:z-auto transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-[100dvh] z-50 lg:static lg:z-auto lg:h-full transition-transform duration-300 ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
