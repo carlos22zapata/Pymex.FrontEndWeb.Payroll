@@ -1,5 +1,5 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
-import { STORAGE_KEYS, AUTH_BASE_URL, API_BASE_URL } from '../lib/constants';
+import { STORAGE_KEYS, AUTH_API_BASE_URL, AUTH_PORTAL_URL, API_BASE_URL } from '../lib/constants';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -92,12 +92,12 @@ api.interceptors.response.use(
 
     if (!refreshToken) {
       clearTokens();
-      window.location.href = 'http://localhost:7200';
+      window.location.href = AUTH_PORTAL_URL;
       return Promise.reject(error);
     }
 
     try {
-      const response = await axios.post(`${AUTH_BASE_URL}/api/Access/RefreshToken`, {
+      const response = await axios.post(`${AUTH_API_BASE_URL}/api/Access/RefreshToken`, {
         refreshToken,
       });
 
@@ -120,7 +120,7 @@ api.interceptors.response.use(
     } catch (refreshError) {
       processQueue(refreshError, null);
       clearTokens();
-      window.location.href = 'http://localhost:7200';
+      window.location.href = AUTH_PORTAL_URL;
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;

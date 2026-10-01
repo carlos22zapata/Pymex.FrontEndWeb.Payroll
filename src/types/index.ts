@@ -12,3 +12,4 @@ export type { ContractVariableDto } from './contractVariable';
 export type { PayrollNoveltyDto } from './payrollNovelty';
 export type { PayrollResultDto, ConceptResultDto } from './payrollCalculation';
 export type { CoinsDto, CoinQuotationDto } from './coins';
+export type { RelatedContractDto } from './relatedContract';

@@ -14,6 +14,7 @@ import { PayrollConceptsPage } from './pages/PayrollConcepts';
 import { PayrollCalculationPage } from './pages/PayrollCalculation';
 import { CoinsPage } from './pages/Coins';
 import { CoinRatesPage } from './pages/CoinRates';
+import { RelatedContractsPage } from './pages/RelatedContracts';
 
 export function App() {
   return (
@@ -38,6 +39,7 @@ export function App() {
             <Route path="/cargos" element={<ProtectedRoute><PositionsPage /></ProtectedRoute>} />
             <Route path="/empleados" element={<ProtectedRoute><EmployeesPage /></ProtectedRoute>} />
             <Route path="/contratos" element={<ProtectedRoute><ContractsPage /></ProtectedRoute>} />
+            <Route path="/contratos-relacionados" element={<ProtectedRoute><RelatedContractsPage /></ProtectedRoute>} />
             <Route path="/variables-nomina" element={<ProtectedRoute><PayrollVariablesPage /></ProtectedRoute>} />
             <Route path="/conceptos-nomina" element={<ProtectedRoute><PayrollConceptsPage /></ProtectedRoute>} />
 

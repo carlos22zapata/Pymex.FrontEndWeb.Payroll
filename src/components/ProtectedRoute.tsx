@@ -1,4 +1,5 @@
 import { useAuth } from '../hooks/useAuth';
+import { AUTH_PORTAL_URL } from '../lib/constants';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -15,7 +16,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!isAuthenticated) {
-    window.location.href = 'http://localhost:7200';
+    window.location.href = AUTH_PORTAL_URL;
     return null;
   }
 

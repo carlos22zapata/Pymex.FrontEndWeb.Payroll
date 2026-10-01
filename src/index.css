@@ -98,6 +98,15 @@ select.input-field {
   animation: slideUp 0.3s ease-out;
 }
 
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-dropdown-in {
+  animation: dropdownIn 0.22s ease-out;
+}
+
 .tooltip-content {
   @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5
          bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900

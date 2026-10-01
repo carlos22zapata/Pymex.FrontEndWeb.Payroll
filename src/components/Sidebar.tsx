@@ -12,12 +12,15 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  X,
   Layers,
   BadgeCheck,
+  Link2,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { ThemeToggle } from './ThemeToggle';
+import { AUTH_PORTAL_URL } from '../lib/constants';
 import logoToolTips from '../assets/logo-tooltips.png';
 
 interface NavItem {
@@ -43,6 +46,7 @@ const navSections: NavSection[] = [
       { label: 'Departamentos', icon: Layers, path: '/departamentos' },
       { label: 'Cargos', icon: BadgeCheck, path: '/cargos' },
       { label: 'Contratos', icon: FileText, path: '/contratos' },
+      { label: 'Contratos Relacionados', icon: Link2, path: '/contratos-relacionados' },
     ],
   },
   {
@@ -88,7 +92,7 @@ export function Sidebar({ onMobileClose }: SidebarProps) {
   const handleLogout = () => {
     logout();
     onMobileClose?.();
-    window.location.href = 'http://localhost:7200';
+    window.location.href = AUTH_PORTAL_URL;
   };
 
   return (
@@ -118,10 +122,17 @@ export function Sidebar({ onMobileClose }: SidebarProps) {
         )}
         <button
           type="button"
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={onMobileClose ?? (() => setCollapsed(!collapsed))}
+          aria-label={onMobileClose ? 'Cerrar menú' : undefined}
           className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300 transition-colors shrink-0"
         >
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          {onMobileClose ? (
+            <X className="h-4 w-4" />
+          ) : collapsed ? (
+            <ChevronRight className="h-4 w-4" />
+          ) : (
+            <ChevronLeft className="h-4 w-4" />
+          )}
         </button>
       </div>
 
@@ -134,7 +145,7 @@ export function Sidebar({ onMobileClose }: SidebarProps) {
         </div>
       )}
 
-      <nav className="flex-1 overflow-y-auto p-3 space-y-5">
+      <nav className="flex-1 min-h-0 overflow-y-auto p-3 space-y-5">
         {navSections.map((section) => (
           <div key={section.title}>
             {!collapsed && (
