@@ -17,7 +17,7 @@ import { CoinRatesPage } from './pages/CoinRates';
 
 export function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/payroll">
       <ThemeProvider>
         <AuthProvider>
           <Toaster
