@@ -7,37 +7,46 @@ import { DecimalInput } from '../components/DecimalInput';
 import { coinsService } from '../services/coinsService';
 import { coinQuotationsService } from '../services/coinQuotationsService';
 import type { CoinsDto, CoinQuotationDto } from '../types';
+import { nowWall, systemTimeZone } from '../lib/timeZone';
 
 const PAGE_SIZE = 10;
 
 function formatDateForDisplay(iso: string): string {
   if (!iso) return '';
+  const naive = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/.exec(iso);
+  const hasZone = /Z$/i.test(iso) || /[+-]\d{2}:\d{2}$/.test(iso);
+  if (naive && !hasZone) {
+    return `${naive[3]}/${naive[2]}/${naive[1]} ${naive[4] ?? '00'}:${naive[5] ?? '00'}`;
+  }
   try {
     const d = new Date(iso);
-    const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const year = d.getFullYear();
-    const hours = String(d.getHours()).padStart(2, '0');
-    const mins = String(d.getMinutes()).padStart(2, '0');
-    return `${day}/${month}/${year} ${hours}:${mins}`;
+    if (isNaN(d.getTime())) return iso;
+    const parts = new Intl.DateTimeFormat('es-VE', {
+      timeZone: systemTimeZone(),
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    }).formatToParts(d);
+    const g = (t: string) => parts.find((p) => p.type === t)?.value ?? '00';
+    return `${g('day')}/${g('month')}/${g('year')} ${g('hour')}:${g('minute')}`;
   } catch { return iso; }
 }
 
 function nowLocalDateTime(): string {
-  const d = new Date();
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const year = d.getFullYear();
-  const hours = String(d.getHours()).padStart(2, '0');
-  const mins = String(d.getMinutes()).padStart(2, '0');
-  return `${day}/${month}/${year} ${hours}:${mins}`;
+  const [date, time] = nowWall().split('T');
+  const [y, m, d] = date.split('-');
+  const [hh, mm] = time.split(':');
+  return `${d}/${m}/${y} ${hh}:${mm}`;
 }
 
 function localToISO(local: string): string {
   const match = local.match(/^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/);
-  if (!match) return new Date().toISOString();
+  if (!match) return nowWall();
   const [, day, month, year, hours, mins] = match;
-  return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(mins)).toISOString();
+  return `${year}-${month}-${day}T${hours}:${mins}:00`;
 }
 
 const emptyQuotation: CoinQuotationDto = {

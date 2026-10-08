@@ -15,11 +15,12 @@ import { contractVariablesService } from '../services/contractVariablesService';
 import { payrollNoveltiesService } from '../services/payrollNoveltiesService';
 import { Behavior, DataType } from '../types';
 import type { EmployeeDto, DepartmentDto, PositionDto, ContractDto, ContractVariableDto, PayrollNoveltyDto } from '../types';
+import { todayWall } from '../lib/timeZone';
 
 const getDefault = (): EmployeeDto => ({
   id: 0, employeeCode: '', name: '', lastName: '', email: '', phone: '',
   address: '', city: '', state: '', zipCode: '',
-  hireDate: new Date().toISOString().split('T')[0],
+  hireDate: todayWall(),
   terminationDate: null, contractId: 0,
   departmentId: 0, positionId: 0,
 });
@@ -97,8 +98,8 @@ export function EmployeesPage() {
     try {
       const payload = {
         ...entity,
-        hireDate: entity.hireDate ? new Date(entity.hireDate).toISOString() : undefined,
-        terminationDate: entity.terminationDate ? new Date(entity.terminationDate).toISOString() : null,
+        hireDate: entity.hireDate || undefined,
+        terminationDate: entity.terminationDate || null,
       };
       const result = entity.id === 0
         ? await employeesService.insert(payload)
@@ -153,7 +154,7 @@ export function EmployeesPage() {
     if (!entity.contractId) { toast.error('El empleado no tiene un contrato asignado'); return; }
     setIsLoadingNovelties(true);
     setNoveltiesModalOpen(true);
-    setPeriodCode(new Date().toISOString().slice(0, 7) + '-Q1');
+    setPeriodCode(todayWall().slice(0, 7) + '-Q1');
     try {
       const contract = contracts.find(c => c.id === entity.contractId) || null;
       setActiveContract(contract);

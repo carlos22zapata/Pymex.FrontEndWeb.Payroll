@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { todayWall } from '../lib/timeZone';
 import { Layout } from '../components/Layout';
 import { employeesService } from '../services/employeesService';
 import { contractsService } from '../services/contractsService';
@@ -62,7 +63,7 @@ export function DashboardPage() {
 
         if (calcResult.isSuccess && calcResult.value && calcResult.value.length > 0) {
           setLastCalculation({
-            date: new Date().toLocaleDateString('es-ES'),
+            date: new Intl.DateTimeFormat('es-ES', { timeZone: 'UTC' }).format(new Date(`${todayWall()}T12:00:00Z`)),
             totalNet,
           });
         }
