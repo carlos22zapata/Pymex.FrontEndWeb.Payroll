@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["../AGENTS.md", "../../.opencode/AGENTS.md"],
+  "skills": {
+    "paths": ["../../.opencode/skills"]
+  },
+  "references": {
+    "docs": {
+      "path": "../../.opencode/docs/Pymex.FrontEndWeb.Payroll",
+      "description": "Documentación técnica del frontend de Nómina: componentes, servicios, tipos, rutas, diseño UI."
+    },
+    "docs-shared": {
+      "path": "../../.opencode/docs",
+      "description": "Documentación completa del ecosistema Pymex (guías, inventario, permisos, mappings de BD)."
+    },
+    "plans": {
+      "path": "../../.opencode/plans",
+      "description": "Planes de implementación y fixes de código."
+    },
+    "memory": {
+      "path": "../../.opencode/memory",
+      "description": "Log de funcionalidad implementada por módulo."
+    }
+  }
+}
